@@ -15,10 +15,10 @@ type TokenClaims interface {
 
 // Sign function sign a token with given content and key. It returns the token string and an error if any.
 // `content`: a struct that implements TokenClaims interface.
-func Sign(content TokenClaims, key string) (string, error) {
+func Sign(content TokenClaims, key string, t time.Duration) (string, error) {
 	// Set up claims
 	claims := jwt.RegisteredClaims{
-		ExpiresAt: jwt.NewNumericDate(time.Now().Add(48 * time.Hour)), // 2 day expiration
+		ExpiresAt: jwt.NewNumericDate(time.Now().Add(t)), // 2 day expiration
 		IssuedAt:  jwt.NewNumericDate(time.Now()),
 	}
 
