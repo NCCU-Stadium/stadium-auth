@@ -12,7 +12,7 @@
 <details>
 <summary><code>POST</code> <code><b>/login/google</b></code> <code>(Login with Google)</code></summary>
 
-##### Body (application/json or application/x-www-form-urlencoded)
+##### Body (application/json)
 
 > | key     | required | data type | description          |
 > | ------- | -------- | --------- | -------------------- |
@@ -34,7 +34,7 @@
 <details>
 <summary><code>POST</code> <code><b>/login/credentials</b></code> <code>(Login with credentials)</code></summary>
 
-##### Body (application/json or application/x-www-form-urlencoded)
+##### Body (application/json)
 
 > | key      | required | data type | description |
 > | -------- | -------- | --------- | ----------- |
@@ -59,7 +59,7 @@
 <details>
 <summary><code>POST</code> <code><b>/register</b></code> <code>(Register with mail and password)</code></summary>
 
-##### Body (application/json or application/x-www-form-urlencoded)
+##### Body (application/json)
 
 > | key      | required | data type | description        |
 > | -------- | -------- | --------- | ------------------ |
@@ -82,7 +82,7 @@
 <details>
 <summary><code>POST</code> <code><b>/refresh</b></code> <code>(Generate a new refresh token)</code></summary>
 
-##### Body (application/json or application/x-www-form-urlencoded)
+##### Body (application/json)
 
 > | key          | required | data type | description |
 > | ------------ | -------- | --------- | ----------- |
