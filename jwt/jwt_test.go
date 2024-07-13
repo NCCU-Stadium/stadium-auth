@@ -23,13 +23,13 @@ func (u *User) SetClaims(claims jwt.RegisteredClaims) {
 	u.RegisteredClaims = claims
 }
 
-func TestSign(t *testing.T) {
+func _TestSign(t *testing.T) {
 	user := &User{
 		Username: "admin",
 		Password: "password",
 	}
 	key := "secret"
-	token, err := Sign(user, key, time.Hour*24) // One day expiration
+	token, err := Sign(user, key, "Bearer ", time.Hour*24) // One day expiration
 	if err != nil {
 		t.Log(err)
 		panic(err)
@@ -37,15 +37,17 @@ func TestSign(t *testing.T) {
 	t.Log(token)
 }
 
-func _TestParse(t *testing.T) {
+func TestParse(t *testing.T) {
 	jwtUser := &User{
 		Username: "admin",
 		Password: "password",
 	}
 	key := "secret"
-	token, err := Sign(jwtUser, key, time.Hour*24) // One day expiration
+	token, err := Sign(jwtUser, key, "Bearer ", time.Hour*24) // One day expiration
+	t.Log("token: ", token)
+
 	tokenString := token
-	claims, err := Parse(tokenString, key)
+	claims, err := Parse(tokenString, key, "Bearer ")
 	if err != nil {
 		t.Log(err)
 	}

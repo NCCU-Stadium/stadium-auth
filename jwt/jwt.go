@@ -15,7 +15,7 @@ type TokenClaims interface {
 
 // Sign function sign a token with given content and key. It returns the token string and an error if any.
 // `content`: a struct that implements TokenClaims interface.
-func Sign(content TokenClaims, key string, t time.Duration) (string, error) {
+func Sign(content TokenClaims, key, prefix string, t time.Duration) (string, error) {
 	// Set up claims
 	claims := jwt.RegisteredClaims{
 		ExpiresAt: jwt.NewNumericDate(time.Now().Add(t)), // 2 day expiration
@@ -33,16 +33,16 @@ func Sign(content TokenClaims, key string, t time.Duration) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return tokenString, nil
+	return prefix + tokenString, nil
 }
 
 // Parse function parse the token and return the claims as a map[string]interface{}.
-func Parse(tokenString, key string) (map[string]interface{}, error) {
+func Parse(tokenString, key, prefix string) (map[string]interface{}, error) {
 	keyFunc := func(token *jwt.Token) (interface{}, error) {
 		return []byte(key), nil
 	}
 
-	token, err := jwt.Parse(tokenString, keyFunc, jwt.WithoutClaimsValidation())
+	token, err := jwt.Parse(tokenString[len(prefix):], keyFunc, jwt.WithoutClaimsValidation())
 	if err != nil {
 		return nil, err
 	}

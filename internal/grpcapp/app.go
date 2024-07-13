@@ -34,7 +34,7 @@ func (s *GrpcServer) Hello(ctx context.Context, in *auth.Empty) (*auth.HelloResp
 }
 
 func (s *GrpcServer) VerifyToken(ctx context.Context, in *auth.VerifyTokenRequest) (*auth.VerifyTokenResponse, error) {
-	parsed, err := jwt.Parse(in.Token, s.config.Secret)
+	parsed, err := jwt.Parse(in.Token, s.config.Secret, "Bearer ")
 	if err != nil {
 		return nil, status.Error(codes.Unknown, "Invalid token")
 	}
