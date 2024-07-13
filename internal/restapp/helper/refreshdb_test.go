@@ -43,13 +43,9 @@ func TestGetRefreshMeta(t *testing.T) {
 		t.Error("Error while creating refresh helper")
 		return
 	}
-	meta := &RefreshMeta{
-		TokenID: uuid.New().String(),
-		UserID:  userID,
-	}
 
 	// 1. Save refresh meta
-	err := rh.SaveRefreshMeta(meta, time.Minute*1)
+	tokenid, err := rh.SaveRefreshMeta(userID, time.Minute*1)
 	if err != nil {
 		t.Error(err)
 		t.Error("Error while saving refresh meta")
@@ -57,7 +53,7 @@ func TestGetRefreshMeta(t *testing.T) {
 
 	// 2. Get refresh meta
 	time.Sleep(time.Second * 5)
-	_, err = rh.GetRefreshMeta(meta.TokenID)
+	_, err = rh.GetRefreshMeta(tokenid)
 	if err != nil {
 		t.Error(err)
 		t.Error("Error while getting refresh meta")
@@ -65,7 +61,7 @@ func TestGetRefreshMeta(t *testing.T) {
 
 	// 3. Get refresh meta again (expect ErrorTokenUsed)
 	time.Sleep(time.Second * 5)
-	_, err = rh.GetRefreshMeta(meta.TokenID)
+	_, err = rh.GetRefreshMeta(tokenid)
 	if err != ErrorTokenUsed {
 		t.Error(err)
 		t.Error("Error while getting refresh meta")

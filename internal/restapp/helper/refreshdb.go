@@ -7,6 +7,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -15,7 +16,7 @@ import (
 type RefreshMeta struct {
 	used     bool      `bson:"used"`
 	UserID   string    `bson:"uid"`
-	TokenID  string    `bson:"_id"`
+	tokenID  string    `bson:"_id"`
 	expireAt time.Time `bson:"expireAt"`
 }
 
@@ -84,23 +85,24 @@ func (rh *RefreshHelper) GetRefreshMeta(tokenid string) (*RefreshMeta, error) {
 		return &RefreshMeta{
 			used:    false,
 			UserID:  result["uid"].(string),
-			TokenID: result["_id"].(string),
+			tokenID: result["_id"].(string),
 		}, nil
 	}
 
 	return nil, ErrorTokenUsed
 }
 
-func (rh *RefreshHelper) SaveRefreshMeta(meta *RefreshMeta, expireAfter time.Duration) error {
-	// Save the refresh metadata to database
+// Save the refresh metaData to database and return token id
+func (rh *RefreshHelper) SaveRefreshMeta(userid string, expireAfter time.Duration) (string, error) {
+	tokenid := uuid.New().String()
 	_, err := rh.collection.InsertOne(context.TODO(), bson.M{
-		"_id":      meta.TokenID,
-		"uid":      meta.UserID,
+		"_id":      tokenid,
+		"uid":      userid,
 		"used":     false,
 		"expireAt": time.Now().Add(expireAfter),
 	})
 	if err != nil {
-		return err
+		return "", err
 	}
-	return nil
+	return tokenid, nil
 }
