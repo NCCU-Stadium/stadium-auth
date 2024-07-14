@@ -9,7 +9,7 @@ type Database struct {
 	database *sql.DB
 }
 
-func Connect(connString string) (Database, error) {
+func New(connString string) (*Database, error) {
 	// Connect to database
 	db, err := sql.Open("pgx", connString)
 	if err != nil {
@@ -19,7 +19,7 @@ func Connect(connString string) (Database, error) {
 	if err != nil {
 		panic(err)
 	}
-	return Database{
+	return &Database{
 		database: db,
 	}, nil
 }
