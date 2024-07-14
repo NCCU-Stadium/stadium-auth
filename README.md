@@ -36,17 +36,17 @@
 
 ##### Body (application/json)
 
-> | key      | required | data type | description |
-> | -------- | -------- | --------- | ----------- |
-> | email    | true     | string    | N/A         |
-> | password | true     | string    | N/A         |
+> | key  | required | data type | description |
+> | ---- | -------- | --------- | ----------- |
+> | mail | true     | string    | N/A         |
+> | pass | true     | string    | N/A         |
 
 ##### Responses
 
-> | http code    | content-type       | response                                                                                                      |
-> | ------------ | ------------------ | ------------------------------------------------------------------------------------------------------------- |
-> | `200`        | `application/json` | `{"name": "username", "email": "user@ex.com", "avatar": "http://avatar.com", "refreshToken": "refreshToken"}` |
-> | `401`, `500` | `text/plain`       | N/A                                                                                                           |
+> | http code | content-type       | response                                                                                                      |
+> | --------- | ------------------ | ------------------------------------------------------------------------------------------------------------- |
+> | `200`     | `application/json` | `{"name": "username", "email": "user@ex.com", "avatar": "http://avatar.com", "refreshToken": "refreshToken"}` |
+> | `401`     | `text/plain`       | N/A                                                                                                           |
 
 ##### Cookie Setup
 
@@ -90,10 +90,10 @@
 
 ##### Responses
 
-> | http code    | content-type       | response                                                                                                      |
-> | ------------ | ------------------ | ------------------------------------------------------------------------------------------------------------- |
-> | `200`        | `application/json` | `{"name": "username", "email": "user@ex.com", "avatar": "http://avatar.com", "refreshToken": "refreshToken"}` |
-> | `401`, `500` | `text/plain`       | N/A                                                                                                           |
+> | http code           | content-type       | response                                                                                                      |
+> | ------------------- | ------------------ | ------------------------------------------------------------------------------------------------------------- |
+> | `200`               | `application/json` | `{"name": "username", "email": "user@ex.com", "avatar": "http://avatar.com", "refreshToken": "refreshToken"}` |
+> | `400`, `401`, `500` | `text/plain`       | N/A                                                                                                           |
 
 ##### Cookie Setup
 
