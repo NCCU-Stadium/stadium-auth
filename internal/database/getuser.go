@@ -8,7 +8,7 @@ import (
 type User struct {
 	Name     string
 	Email    string
-	Password string
+	Password sql.NullString
 	Avatar   string
 	Id       string
 }
