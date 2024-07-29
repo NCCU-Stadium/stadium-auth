@@ -118,6 +118,11 @@ The auth-service also expose the functionality the generate and verify the JWT t
 
 ##### Response Type
 
+```js
+// Stringified string (Use `JSON.parse()` to parse the string):
+{"UserMail":"dev@dev.com","UserName":"dev","exp":1722324402,"iat":1722238002}
+```
+
 > | key     | data type | description                                          |
 > | ------- | --------- | ---------------------------------------------------- |
 > | claims  | string    | Stringified JSON data (Empty string if it's expired) |
