@@ -23,8 +23,8 @@ func New(c *config.Config) *RestServer {
 
 func (s RestServer) middleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-        origin := r.Header.Get("Origin")
-        w.Header().Set("Access-Control-Allow-Origin", origin)
+		origin := r.Header.Get("Origin")
+		w.Header().Set("Access-Control-Allow-Origin", origin)
 		// Allow CORS here By http://localhost:3000
 		// w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
 		w.Header().Set("Access-Control-Allow-Methods", "POST, GET, DELETE")
@@ -52,8 +52,16 @@ func use(r *http.ServeMux, middlewares ...func(next http.Handler) http.Handler) 
 }
 
 func hello(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("HELLO from auth-service"))
+	// Get cookie test
+	cookie, err := r.Cookie("accessToken")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	w.Write([]byte("accessToken value: " + cookie.Value))
 	return
+	// w.Write([]byte("HELLO from auth-service"))
+	// return
 }
 
 func (s *RestServer) Routes() http.Handler {
