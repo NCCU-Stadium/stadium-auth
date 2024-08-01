@@ -77,7 +77,9 @@ func (s *RestServer) Refresh(w http.ResponseWriter, r *http.Request) {
 		Value:    newAccessToken,
 		MaxAge:   int(AccessTokenDuration),
 		Path:     "/",
-		SameSite: http.SameSiteLaxMode,
+		HttpOnly: false,
+		SameSite: http.SameSiteNoneMode,
+		Secure:   true,
 	})
 
 	// 5. Return the response

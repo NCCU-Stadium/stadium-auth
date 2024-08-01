@@ -112,7 +112,9 @@ func (s *RestServer) google(w http.ResponseWriter, r *http.Request) {
 		Value:    accessToken,
 		MaxAge:   int(AccessTokenDuration),
 		Path:     "/",
-		SameSite: http.SameSiteLaxMode,
+		HttpOnly: false,
+		SameSite: http.SameSiteNoneMode,
+		Secure:   true,
 	})
 
 	// 4. Generate refresh token and put into refresh token db
@@ -183,7 +185,9 @@ func (s *RestServer) credentials(w http.ResponseWriter, r *http.Request) {
 		Value:    accessToken,
 		MaxAge:   int(AccessTokenDuration),
 		Path:     "/",
-		SameSite: http.SameSiteLaxMode,
+		HttpOnly: false,
+		SameSite: http.SameSiteNoneMode,
+		Secure:   true,
 	})
 
 	// 3. Generate refresh token and put into refresh token db
