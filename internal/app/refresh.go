@@ -1,7 +1,7 @@
-package restapp
+package app
 
 import (
-	"auth-service/internal/restapp/helper"
+	"auth-service/internal/helper"
 	"auth-service/jwt"
 	"encoding/json"
 	"net/http"
@@ -11,7 +11,7 @@ type RefreshRequest struct {
 	RefreshToken string `json:"refreshToken"`
 }
 
-func (s *RestServer) Refresh(w http.ResponseWriter, r *http.Request) {
+func (s *Server) Refresh(w http.ResponseWriter, r *http.Request) {
 	in := &RefreshRequest{}
 	err := json.NewDecoder(r.Body).Decode(in)
 	if err != nil {
@@ -40,7 +40,7 @@ func (s *RestServer) Refresh(w http.ResponseWriter, r *http.Request) {
 
 	// 2. Get the refresh meta and verify refresh meta
 	_, err = s.refreshHelper.GetRefreshMeta(refreshContent.TokenID)
-	if err == restapp_helper.ErrorTokenUsed || err == restapp_helper.ErrorTokenNotFound {
+	if err == helper.ErrorTokenUsed || err == helper.ErrorTokenNotFound {
 		http.Error(w, err.Error(), http.StatusUnauthorized)
 		return
 	}
@@ -50,8 +50,8 @@ func (s *RestServer) Refresh(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// 3. Generate new refresh token
-	tokenid, err := s.refreshHelper.SaveRefreshMeta(refreshContent.UserID, RefreshTokenDuration)
-	newRefreshContent := &RefreshContent{UserID: refreshContent.UserID, TokenID: tokenid, UserMail: refreshContent.UserMail}
+	tokenid, err := s.refreshHelper.SaveRefreshMeta(refreshContent.UserRole, RefreshTokenDuration)
+	newRefreshContent := &RefreshContent{UserRole: refreshContent.UserRole, TokenID: tokenid, UserMail: refreshContent.UserMail}
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -63,10 +63,9 @@ func (s *RestServer) Refresh(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// 4. Generate new access token and set cookie
-	userName, err := s.restHelper.GetUserName(r.Context(), refreshContent.UserMail)
 	newAccessContent := &AccessContent{
 		UserMail: refreshContent.UserMail,
-		UserName: userName,
+		UserRole: refreshContent.UserRole,
 	}
 	newAccessToken, err := jwt.Sign(newAccessContent, s.config.Secret, "Bearer ", AccessTokenDuration)
 	if err != nil {
@@ -83,11 +82,11 @@ func (s *RestServer) Refresh(w http.ResponseWriter, r *http.Request) {
 	})
 
 	// 5. Return the response
-	user, err := s.restHelper.GetUserByEmail(r.Context(), refreshContent.UserMail)
+	user, err := s.helper.GetUserByMail(r.Context(), refreshContent.UserMail)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
-	res := &LoginResponse{Name: user.Name, Mail: user.Email, Avatar: user.Avatar, RefreshToken: newRefreshToken}
+	res := &LoginResponse{Mail: user.Mail, Role: user.Role, RefreshToken: newRefreshToken}
 	err = json.NewEncoder(w).Encode(res)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

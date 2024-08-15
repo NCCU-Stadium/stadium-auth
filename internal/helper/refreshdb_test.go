@@ -1,4 +1,4 @@
-package restapp_helper
+package helper
 
 import (
 	"context"

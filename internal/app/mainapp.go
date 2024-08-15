@@ -1,27 +1,27 @@
-package restapp
+package app
 
 import (
 	"auth-service/internal/config"
-	"auth-service/internal/restapp/helper"
+	"auth-service/internal/helper"
 	"log"
 	"net/http"
 )
 
-type RestServer struct {
+type Server struct {
 	config        *config.Config
-	refreshHelper *restapp_helper.RefreshHelper
-	restHelper    *restapp_helper.RestHelper
+	refreshHelper *helper.RefreshHelper
+	helper        *helper.Helper
 }
 
-func New(c *config.Config) *RestServer {
+func New(c *config.Config) *Server {
 	log.Print("Rest server started")
-	refreshHelper := restapp_helper.NewRefreshDB(c)
-	restHelper := restapp_helper.NewRestHelper(c)
+	refreshHelper := helper.NewRefreshDB(c)
+	helper := helper.NewRestHelper(c)
 
-	return &RestServer{config: c, refreshHelper: refreshHelper, restHelper: restHelper}
+	return &Server{config: c, refreshHelper: refreshHelper, helper: helper}
 }
 
-func (s RestServer) middleware(next http.Handler) http.Handler {
+func (s Server) middleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		origin := r.Header.Get("Origin")
 		w.Header().Set("Access-Control-Allow-Origin", origin)
@@ -64,12 +64,12 @@ func hello(w http.ResponseWriter, r *http.Request) {
 	// return
 }
 
-func (s *RestServer) Routes() http.Handler {
+func (s *Server) Routes() http.Handler {
 	// Start the server
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("GET /", hello)
-	mux.HandleFunc("POST /login/", s.Login)
+	mux.HandleFunc("POST /login", s.Login)
 	mux.HandleFunc("POST /register", s.Register)
 	mux.HandleFunc("POST /refresh", s.Refresh)
 

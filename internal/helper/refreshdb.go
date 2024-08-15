@@ -1,4 +1,4 @@
-package restapp_helper
+package helper
 
 import (
 	"auth-service/internal/config"
@@ -15,7 +15,7 @@ import (
 
 type RefreshMeta struct {
 	used     bool      `bson:"used"`
-	UserID   string    `bson:"uid"`
+	UserMail string    `bson:"umail"`
 	tokenID  string    `bson:"_id"`
 	expireAt time.Time `bson:"expireAt"`
 }
@@ -83,9 +83,9 @@ func (rh *RefreshHelper) GetRefreshMeta(tokenid string) (*RefreshMeta, error) {
 			return nil, err
 		}
 		return &RefreshMeta{
-			used:    false,
-			UserID:  result["uid"].(string),
-			tokenID: result["_id"].(string),
+			used:     false,
+			UserMail: result["uid"].(string),
+			tokenID:  result["_id"].(string),
 		}, nil
 	}
 
@@ -97,7 +97,7 @@ func (rh *RefreshHelper) SaveRefreshMeta(userid string, expireAfter time.Duratio
 	tokenid := uuid.New().String()
 	_, err := rh.collection.InsertOne(context.TODO(), bson.M{
 		"_id":      tokenid,
-		"uid":      userid,
+		"umail":    userid,
 		"used":     false,
 		"expireAt": time.Now().Add(expireAfter),
 	})

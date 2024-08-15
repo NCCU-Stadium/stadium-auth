@@ -1,4 +1,4 @@
-package restapp
+package app
 
 import (
 	"time"
@@ -8,14 +8,14 @@ import (
 
 // RefreshContent is a struct containing the decoded refresh token
 type RefreshContent struct {
-	UserID   string
+	UserRole string
 	TokenID  string
 	UserMail string
 	jwt.RegisteredClaims
 }
 
 func (r *RefreshContent) ToDomain(m map[string]interface{}) {
-	r.UserID = m["UserID"].(string)
+	r.UserRole = m["UserRole"].(string)
 	r.TokenID = m["TokenID"].(string)
 	r.UserMail = m["UserMail"].(string)
 	return
@@ -30,13 +30,13 @@ var RefreshTokenDuration = time.Hour * 24 * 30 * 2 // Two month
 // AccessContent is a struct containing the decoded access token
 type AccessContent struct {
 	UserMail string
-	UserName string
+	UserRole string
 	jwt.RegisteredClaims
 }
 
 func (a *AccessContent) ToDomain(m map[string]interface{}) {
 	a.UserMail = m["UserMail"].(string)
-	a.UserName = m["UserName"].(string)
+	a.UserRole = m["UserRole"].(string)
 	return
 }
 

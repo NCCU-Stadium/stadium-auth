@@ -5,16 +5,9 @@ import (
 	"database/sql"
 )
 
-type User struct {
-	Name     string
-	Email    string
-	Password sql.NullString
-	Avatar   string
-	Id       string
-}
+func (db *Database) GetUserByMail(ctx context.Context, email string) (User, error) {
+	row := db.database.QueryRowContext(ctx, `select mail, role, phone, pass from user_t where mail = $1`, email)
 
-func (db *Database) GetUserByEmail(ctx context.Context, email string) (User, error) {
-	row := db.database.QueryRowContext(ctx, `select name, mail, pass, avatar, id from user_t where mail = $1`, email)
 	if row.Err() == sql.ErrNoRows {
 		return User{}, sql.ErrNoRows
 	}
@@ -22,10 +15,11 @@ func (db *Database) GetUserByEmail(ctx context.Context, email string) (User, err
 		return User{}, row.Err()
 	}
 
-	user := User{}
-	err := row.Scan(&user.Name, &user.Email, &user.Password, &user.Avatar, &user.Id)
+	var u User
+	err := row.Scan(&u.Mail, &u.Role, &u.Phone, &u.Pass)
 	if err != nil {
 		return User{}, err
 	}
-	return user, nil
+
+	return u, nil
 }
