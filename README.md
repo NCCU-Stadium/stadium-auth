@@ -1,79 +1,59 @@
 # auth-service
 
 - RESTful APIs running on `localhost:8085`
-- gRPC API running on `localhost:50050`
 
 ---
-
-## RESTful APIs
-
-### Login
-
-<details>
-<summary><code>POST</code> <code><b>/login/google</b></code> <code>(Login with Google)</code></summary>
-
-##### Body (application/json)
-
-> | key     | required | data type | description          |
-> | ------- | -------- | --------- | -------------------- |
-> | idToken | true     | string    | Id token from Google |
-
-##### Responses
-
-> | http code    | content-type       | response                                                                                                      |
-> | ------------ | ------------------ | ------------------------------------------------------------------------------------------------------------- |
-> | `200`        | `application/json` | `{"name": "username", "email": "user@ex.com", "avatar": "http://avatar.com", "refreshToken": "refreshToken"}` |
-> | `401`, `500` | `text/plain`       | N/A                                                                                                           |
-
-##### Cookie Setup
-
-> Upon successful login, a cookie named `accessToken` will be set with HttpOnly and Secure flag.
-
-</details>
-
-<details>
-<summary><code>POST</code> <code><b>/login/credentials</b></code> <code>(Login with credentials)</code></summary>
-
-##### Body (application/json)
-
-> | key  | required | data type | description |
-> | ---- | -------- | --------- | ----------- |
-> | mail | true     | string    | N/A         |
-> | pass | true     | string    | N/A         |
-
-##### Responses
-
-> | http code | content-type       | response                                                                                                      |
-> | --------- | ------------------ | ------------------------------------------------------------------------------------------------------------- |
-> | `200`     | `application/json` | `{"name": "username", "email": "user@ex.com", "avatar": "http://avatar.com", "refreshToken": "refreshToken"}` |
-> | `401`     | `text/plain`       | N/A                                                                                                           |
-
-##### Cookie Setup
-
-> Upon successful login, a cookie named `accessToken` will be set with HttpOnly and Secure flag.
-
-</details>
 
 ### Register
 
 <details>
-<summary><code>POST</code> <code><b>/register</b></code> <code>(Register with mail and password)</code></summary>
+<summary><code>POST</code> <code><b>/register</b></code> <code>(Register user)</code></summary>
 
-##### Body (application/json)
+##### Body (application/json or application/x-www-form-urlencoded)
 
-> | key      | required | data type | description        |
-> | -------- | -------- | --------- | ------------------ |
-> | name     | true     | string    | N/A                |
-> | email    | true     | string    | N/A                |
-> | password | true     | string    | N/A                |
-> | avatar   | false    | string    | Avatar's image URL |
+> | key      | required | data type | description                  |
+> | -------- | -------- | --------- | ---------------------------- |
+> | email    | true     | string    | User's mail                  |
+> | password | true     | string    | User's password              |
+> | phone    | true     | string    | User's phone                 |
+> | role     | true     | string    | "user", "admin" or "coach"   |
+> | name     | true     | string    | Default's user name          |
+> | avatar   | false    | string    | Avatar url                   |
+> | gender   | false    | string    | "F" or "M"                   |
+> | birth    | false    | string    | YYYY-MM-DD _e.g._ 2003-04-01 |
 
 ##### Responses
 
-> | http code    | content-type | response |
-> | ------------ | ------------ | -------- |
-> | `200`        | `text/plain` | N/A      |
-> | `401`, `500` | `text/plain` | N/A      |
+> | http code    | content-type       | response                  |
+> | ------------ | ------------------ | ------------------------- |
+> | `200`        | `application/json` | `{"mail": "user's mail"}` |
+> | `409`, `500` | `text/plain`       | `error message`           |
+
+</details>
+
+### Login
+
+<details>
+<summary><code>POST</code> <code><b>/login</b></code> <code>(Login user)</code></summary>
+
+##### Body (application/json or application/x-www-form-urlencoded)
+
+> | key      | required | data type | description     |
+> | -------- | -------- | --------- | --------------- |
+> | email    | true     | string    | User's mail     |
+> | password | true     | string    | User's password |
+
+##### Responses
+
+> | http code | content-type       | response                                                                                   |
+> | --------- | ------------------ | ------------------------------------------------------------------------------------------ |
+> | `200`     | `application/json` | `{"email": "user's mail", "role": "user" \| "admin" \| "coach", jwtToken: "Bearer token"}` |
+> | `401`     | `text/plain`       | `passwords do not match`                                                                   |
+> | `500`     | `text/plain`       | `internal error message`                                                                   |
+
+##### Cookie Setup
+
+> Upon successful login, a cookie named `accessToken` will be set with HttpOnly and Secure flag.
 
 </details>
 
@@ -98,41 +78,5 @@
 ##### Cookie Setup
 
 > Upon successful refresh, a cookie named `accessToken` will be set with HttpOnly and Secure flag.
-
-</details>
-
-## gRPC APIs
-
-The auth-service also expose the functionality the generate and verify the JWT tokens.
-
-### Verify
-
-<details>
-<summary><code>GET</code> <code><b>/verify</b></code> <code>(Verify a existing JWT token)</code></summary>
-
-##### Request Type
-
-> | key   | required | data type | description                 |
-> | ----- | -------- | --------- | --------------------------- |
-> | token | true     | string    | Starts with `Bearer<space>` |
-
-##### Response Type
-
-```js
-// Stringified string (Use `JSON.parse()` to parse the string):
-{"UserMail":"dev@dev.com","UserName":"dev","exp":1722324402,"iat":1722238002}
-```
-
-> | key     | data type | description                                          |
-> | ------- | --------- | ---------------------------------------------------- |
-> | claims  | string    | Stringified JSON data (Empty string if it's expired) |
-> | expired | bool      | N/A                                                  |
-
-##### Error Code
-
-> | status code                | response       |
-> | -------------------------- | -------------- |
-> | `UNKNOWN 2`, `INTERNAL 13` | Invalid token  |
-> | `INTERNAL 13`              | Marchal failed |
 
 </details>
