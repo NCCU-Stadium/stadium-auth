@@ -45,11 +45,11 @@
 
 ##### Responses
 
-> | http code | content-type       | response                                                                                   |
-> | --------- | ------------------ | ------------------------------------------------------------------------------------------ |
-> | `200`     | `application/json` | `{"email": "user's mail", "role": "user" \| "admin" \| "coach", jwtToken: "Bearer token"}` |
-> | `401`     | `text/plain`       | `passwords do not match`                                                                   |
-> | `500`     | `text/plain`       | `internal error message`                                                                   |
+> | http code | content-type       | response                                                                                       |
+> | --------- | ------------------ | ---------------------------------------------------------------------------------------------- |
+> | `200`     | `application/json` | `{"email": "user's mail", "role": "user" \| "admin" \| "coach", refreshToken: "Bearer token"}` |
+> | `401`     | `text/plain`       | `passwords do not match`                                                                       |
+> | `500`     | `text/plain`       | `internal error message`                                                                       |
 
 ##### Cookie Setup
 
@@ -70,10 +70,10 @@
 
 ##### Responses
 
-> | http code           | content-type       | response                                                                                                      |
-> | ------------------- | ------------------ | ------------------------------------------------------------------------------------------------------------- |
-> | `200`               | `application/json` | `{"name": "username", "email": "user@ex.com", "avatar": "http://avatar.com", "refreshToken": "refreshToken"}` |
-> | `400`, `401`, `500` | `text/plain`       | N/A                                                                                                           |
+> | http code           | content-type       | response                                                                                         |
+> | ------------------- | ------------------ | ------------------------------------------------------------------------------------------------ |
+> | `200`               | `application/json` | `{"email": "user@ex.com", "role": "user" \| "admin" \| "coach", "refreshToken": "Bearer token"}` |
+> | `400`, `401`, `500` | `text/plain`       | N/A                                                                                              |
 
 ##### Cookie Setup
 
