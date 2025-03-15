@@ -84,7 +84,7 @@ func (rh *RefreshHelper) GetRefreshMeta(tokenid string) (*RefreshMeta, error) {
 		}
 		return &RefreshMeta{
 			used:     false,
-			UserMail: result["uid"].(string),
+			UserMail: result["umail"].(string),
 			tokenID:  result["_id"].(string),
 		}, nil
 	}

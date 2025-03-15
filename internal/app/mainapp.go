@@ -14,7 +14,7 @@ type Server struct {
 }
 
 func New(c *config.Config) *Server {
-	log.Print("Rest server started")
+    log.Print("Server started on port :8085")
 	refreshHelper := helper.NewRefreshDB(c)
 	helper := helper.NewRestHelper(c)
 

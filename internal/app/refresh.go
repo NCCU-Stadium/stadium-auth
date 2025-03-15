@@ -35,8 +35,8 @@ func (s *Server) Refresh(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusUnauthorized)
 		return
 	}
-	var refreshContent RefreshContent // refreshContent is a struct containing the decoded refresh token
-	refreshContent.ToDomain(content)  // Convert the content to RefreshContent struct
+	refreshContent := &RefreshContent{} // refreshContent is a struct containing the decoded refresh token
+	refreshContent.ToDomain(content)    // Convert the content to RefreshContent struct
 
 	// 2. Get the refresh meta and verify refresh meta
 	_, err = s.refreshHelper.GetRefreshMeta(refreshContent.TokenID)
